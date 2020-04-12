@@ -1,0 +1,45 @@
+﻿@model Mvc2Ajax.ViewModels.PlayerListViewModel
+@{
+    ViewData["Title"] = "Players";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Players</h1>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model.Players)
+        {
+            <tr>
+                <td onmouseover="console.log('@p.Id')" >@p.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@*@section scripts{
+    <script>
+        function fetch(id) {
+            console.log(id);
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById('grid').innerHTML = this.responseText;
+                }
+            };
+            xhr.open('get', '/player/get?id=' + id);
+            xhr.send();
+
+        }
+
+    </script>
+}*@
+
