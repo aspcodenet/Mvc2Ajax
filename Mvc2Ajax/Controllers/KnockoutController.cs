@@ -1,63 +1,48 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Mvc2Ajax.Models;
 using Mvc2Ajax.Services;
 using Mvc2Ajax.ViewModels;
 
 namespace Mvc2Ajax.Controllers
 {
-    public class PlayerController : Controller
+    public class KnockoutController : Controller
     {
         private readonly IPlayerRepository _playerRepository;
         private readonly IWebHostEnvironment _environment;
 
-        public PlayerController(IPlayerRepository playerRepository, IWebHostEnvironment environment)
+        public KnockoutController(IPlayerRepository playerRepository, IWebHostEnvironment environment)
         {
             _playerRepository = playerRepository;
             _environment = environment;
         }
+        // GET
         public IActionResult Index()
         {
-            var viewModel = new PlayerListViewModel();
-            viewModel.Players = _playerRepository.GetAll().Select(PlayerToPlayerViewModel).ToList();
-            return View(viewModel);
-        }
+            var model = _playerRepository.GetAll().Select(r => new PlayerListViewModel.PlayerViewModel
+            {
+                Id = r.Id,
+                Assists = 40,
+                Goals = 51,
+                ImageUrl = Path.Combine(_environment.ContentRootPath, $"/images/{r.Id}.jpg"),
+                JerseyNumber = r.JerseyNumber,
+                Name = r.Name,
+                Position = r.Position
 
-        public IActionResult Get(Guid id)
-        {
-            var model = _playerRepository.GetAll().Where(r=>r.Id == id).Select(PlayerToPlayerViewModel).SingleOrDefault();
+            }).First();
             return View(model);
         }
 
-        public IActionResult GetJson(Guid id)
-        {
-            var model = _playerRepository.GetAll().Where(r => r.Id == id).Select(PlayerToPlayerViewModel).SingleOrDefault();
-            return Json(model);
-        }
-        public IActionResult JQueryJson()
+
+        public IActionResult KnockoutList()
         {
             var viewModel = new PlayerListViewModel();
             viewModel.Players = _playerRepository.GetAll().Select(PlayerToPlayerViewModel).ToList();
             return View(viewModel);
         }
-
-
-
-
-        public IActionResult JQuery()
-        {
-            var viewModel = new PlayerListViewModel();
-            viewModel.Players = _playerRepository.GetAll().Select(PlayerToPlayerViewModel).ToList();
-            return View(viewModel);
-        }
-
-
 
         private PlayerListViewModel.PlayerViewModel PlayerToPlayerViewModel(Player arg)
         {

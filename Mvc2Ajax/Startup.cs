@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Mvc2Ajax.Services;
 
 namespace Mvc2Ajax
@@ -24,6 +27,21 @@ namespace Mvc2Ajax
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication()
+                .AddCookie()
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        RequireExpirationTime = false,
+                        ValidateAudience = false,
+                        RequireAudience = false,
+                        ValidateIssuer = false,
+                        //ValidIssuer = 
+                        //ValidAudience = 
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Token:secretKey"]))
+                    };
+                });
             services.AddTransient<IPlayerRepository,PlayerRepository>();
             services.AddControllersWithViews();
         }
@@ -46,6 +64,7 @@ namespace Mvc2Ajax
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

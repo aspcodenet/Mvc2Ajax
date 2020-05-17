@@ -11,28 +11,33 @@
     <thead>
         <tr>
             <th scope="col">Name</th>
+            <th scope="col">Action</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var p in Model.Players)
-        {
-            <tr>
-                <td onmouseover="console.log('@p.Id')" >@p.Name</td>
-            </tr>
-        }
+    @foreach (var p in Model.Players)
+    {
+        <tr>
+            <td>@p.Name</td>
+
+            <td><a href="#" onclick="fetch('@p.Id')">Fetch</a></td>
+        </tr>
+    }
     </tbody>
 </table>
 
+<div id="currentPlayerPartial"></div>
 
 
-@*@section scripts{
+
+@section scripts{
     <script>
         function fetch(id) {
             console.log(id);
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById('grid').innerHTML = this.responseText;
+                    document.getElementById('currentPlayerPartial').innerHTML = this.responseText;
                 }
             };
             xhr.open('get', '/player/get?id=' + id);
@@ -41,5 +46,5 @@
         }
 
     </script>
-}*@
+}
 

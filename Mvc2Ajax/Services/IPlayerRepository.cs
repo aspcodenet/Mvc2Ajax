@@ -9,5 +9,6 @@ namespace Mvc2Ajax.Services
     {
         IEnumerable<Player> GetAll();
         Player Get(Guid id);
+        void Add(Player player);
     }
 }

@@ -1,0 +1,75 @@
+﻿@model Mvc2Ajax.ViewModels.PlayerListViewModel
+@{
+    ViewData["Title"] = "Players";
+}
+<script src="https://cdn.jsdelivr.net/npm/knockout@3.5.1/build/output/knockout-latest.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/knockout.mapping@2.4.3/knockout.mapping.min.js"></script>
+
+<div class="text-center">
+    <h1 class="display-4">Players</h1>
+</div>
+
+<div class="text-center">
+    <h1 class="display-4" data-bind="text: team"></h1>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: players">
+    <tr>
+        <td data-bind="text: name"></td>
+        <td data-bind="click: $root.selectMe">Select me</td>
+    </tr>
+    </tbody>
+</table>
+
+
+<div data-bind="with: selected">
+    <h2>Current player: <span data-bind="text: name"></span></h2>
+    <img data-bind="attr:{ src: imageUrl}" />
+</div>
+
+
+
+
+
+@section scripts{
+    <script>
+        var playerViewModel = function (data) {
+            self = this;
+            ko.mapping.fromJS(data, {}, this);
+
+            self.selected = ko.observable(null);
+
+            self.selectMe = function (player) {
+                console.dir(player);
+                self.selected(player);
+            }
+        }
+
+        //var mapping = {
+        //    'players': {
+        //        create: function(options) {
+        //            return new playerViewModel(options.data);
+        //        }
+        //    }
+        //}
+
+
+        var model = @Html.Raw(Json.Serialize(Model));
+        //var viewModel = ko.mapping.fromJS(model,mapping);
+        var viewModel = new playerViewModel(model);
+        console.log(viewModel.team());
+        ko.applyBindings(viewModel);
+
+       
+
+    </script>
+}
+
+

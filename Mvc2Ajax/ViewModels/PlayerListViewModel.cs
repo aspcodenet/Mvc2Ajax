@@ -15,8 +15,13 @@ namespace Mvc2Ajax.ViewModels
             public string Name { get; set; }
             public int JerseyNumber  { get; set; }
             public string Position { get; set; }
-
             public string ImageUrl { get; set; }
+
+            public int Goals { get; set; }
+            public int Assists { get; set; }
         }
+
+
+        public string Team { get; set; }
     }
 }

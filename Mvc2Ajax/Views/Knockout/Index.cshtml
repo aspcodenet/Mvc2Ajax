@@ -1,0 +1,53 @@
+﻿@model Mvc2Ajax.ViewModels.PlayerListViewModel.PlayerViewModel
+@{
+    ViewData["Title"] = "Player";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.1/knockout-latest.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping.min.js"></script>
+
+<div class="text-center">
+    <h1 class="display-4" data-bind="text: name"></h1>
+</div>
+<img data-bind="attr:{ src: imageUrl}" />
+
+
+
+<div data-bind="visible: goals() > 60">
+    <h2>What a scorer!!</h2>
+</div>
+
+Mål:
+<input type="number" data-bind="value: goals" />
+Ass:
+<input type="number" data-bind="value: assists" />
+
+<h2>Total points (goals + assists)</h2>
+<div data-bind="text: goals()+assists()"></div>
+/* Not working after update - lets create a viewModel with computed  */
+<div data-bind="text: totalPoints()"></div>
+
+
+<button data-bind="click: addAssist">Add assist</button>
+
+@section scripts{
+    <script>
+
+        var playerVM = function(data) {
+            ko.mapping.fromJS(data, {}, this);
+
+            this.totalPoints = ko.computed(function() {
+                return parseInt(this.goals()) + parseInt(this.assists());
+            }, this);
+
+            this.addAssist = function() {
+                this.assists(parseInt(this.assists()) + 1);
+            }
+        }
+
+
+        var model = @Html.Raw(Json.Serialize(Model));
+        //var viewModel = ko.mapping.fromJS(model,mapping);
+        var viewModel = new playerVM(model);
+        ko.applyBindings(viewModel);
+    </script>
+}
