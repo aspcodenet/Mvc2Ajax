@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,28 +22,49 @@ namespace Mvc2Ajax.Controllers
     {
         private readonly IPlayerRepository _repository;
 
-        #region better
+        #region "bad"
+        //[HttpGet]
+        //public JsonResult Get()
+        //{
+        //    return new JsonResult(_repository.GetAll().Select(PlayerToPlayerDto));
+        //}
 
+        //[HttpGet("{id}", Name = "Get")]
+        //public JsonResult Get(string id)
+        //{
+        //    var player = _repository.GetAll().Where(r => r.Id == Guid.Parse(id)).Select(PlayerToPlayerDto).FirstOrDefault();
+        //    return new JsonResult(player);
+        //}
+
+        #endregion  
+
+
+
+        public PlayerApiController(IPlayerRepository repository)
+        {
+            _repository = repository;
+        }
+
+        #region "better"
         [HttpGet]
         public IActionResult Get()
         {
-            var user = User;
+
+            var user = User.Identity.Name;
             return Ok(_repository.GetAll().Select(PlayerToPlayerDto));
         }
 
-        //api/player/123
-        [HttpGet("{id}")]
-        public ActionResult Get(string id)
+        [HttpGet("{id}", Name = "Get")]
+        public IActionResult Get(string id)
         {
             var player = _repository.GetAll().Where(r => r.Id == Guid.Parse(id)).Select(PlayerToPlayerDto).FirstOrDefault();
             if (player == null) return NotFound();
-            return Ok(player);
+            return Ok(player); 
         }
-
-
+        #endregion
 
         [HttpPost]
-        public IActionResult Create( [FromBody] PlayerApiCreationDto model)
+        public ActionResult Create([FromBody] PlayerApiCreationDto model)
         {
             var player = new Player
             {
@@ -53,25 +74,24 @@ namespace Mvc2Ajax.Controllers
                 Position = model.Position
             };
             _repository.Add(player);
-            return CreatedAtAction("Get", new {player.Id}, player);
+            return CreatedAtAction("Get",new{player.Id},player);
         }
 
+       
         [HttpPut("{id}")]
         public IActionResult Put(string id, [FromBody] PlayerApiUpdateDto model)
         {
             var player = _repository.GetAll().FirstOrDefault(r => r.Id == Guid.Parse(id));
             if (player == null) return NotFound();
-
             player.JerseyNumber = model.JerseyNumber;
             player.Name = model.Name;
             player.Position = model.Position;
             //    ...Save etc etc 
-
-
             return NoContent();
 
         }
 
+        // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
@@ -79,35 +99,6 @@ namespace Mvc2Ajax.Controllers
             if (player == null) return NotFound();
             //delete from db
             return NoContent();
-        }
-
-
-
-        #endregion
-
-        #region "bad"
-        //[HttpGet]
-        //public JsonResult Get()
-        //{
-        //    return new JsonResult(_repository.GetAll().Select(PlayerToPlayerDto));
-        //}
-
-        //[HttpGet]
-        //public JsonResult GetId(string id)
-        //{
-        //    var player = _repository.GetAll().Where(r => r.Id == Guid.Parse(id)).Select(PlayerToPlayerDto).FirstOrDefault();
-        //    var res = new JsonResult(player);
-        //    if (player == null)
-        //        res.StatusCode = 404;
-
-        //    return res;
-        //}
-
-        #endregion
-
-        public PlayerApiController(IPlayerRepository repository)
-        {
-            _repository = repository;
         }
 
 
