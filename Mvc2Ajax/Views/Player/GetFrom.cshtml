@@ -1,0 +1,12 @@
+﻿@model Mvc2Ajax.ViewModels.PlayerListViewModel
+@{
+    Layout = null;
+}
+
+        @foreach (var p in Model.Players)
+        {
+            <tr>
+                <td> @p.Name</td>
+            </tr>
+        }
+        

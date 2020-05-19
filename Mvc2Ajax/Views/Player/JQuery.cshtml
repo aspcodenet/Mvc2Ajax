@@ -9,33 +9,37 @@
 
 <table class="table">
     <thead>
-    <tr>
-        <th scope="col">Name</th>
-    </tr>
+        <tr>
+            <th scope="col">Name</th>
+        </tr>
     </thead>
     <tbody>
-    @foreach (var p in Model.Players)
-    {
-        <tr>
-            <td onmouseover="fetch('@p.Id')" >@p.Name</td>
-        </tr>
-    }
+        @foreach (var p in Model.Players)
+        {
+            <tr>
+                <td> @p.Name</td>
+            </tr>
+        }
+        
     </tbody>
-</table>
+    </table>
 
-<div id="currentPlayerPartial"></div>
+    <div id="currentPlayerPartial"></div>
 
+    <button onclick="fetch20more()">Tryck</button>
 
+    @section scripts{
+        <script>
+            var skip = 0;
+            function fetch20more() {
+                skip = skip + 20;
+                $.ajax({
+                    url: "/player/GetFrom?startPos=" + skip, success: function (result) {
+                        $("#currentPlayerPartial").append(result);
+                    }
+                });
+            }
 
-@section scripts{
-    <script>
-        function fetch(id) {
-            console.log(id);
-
-            $.ajax({url: "/player/get?id=" + id, success: function(result){
-                $("#currentPlayerPartial").html(result);
-            }});        }
-
-    </script>
-}
+        </script>
+    }
 

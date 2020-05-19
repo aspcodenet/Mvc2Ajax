@@ -53,7 +53,15 @@ namespace Mvc2Ajax.Controllers
         public IActionResult JQuery()
         {
             var viewModel = new PlayerListViewModel();
-            viewModel.Players = _playerRepository.GetAll().Select(PlayerToPlayerViewModel).ToList();
+            viewModel.Players = _playerRepository.GetFrom(0).Select(PlayerToPlayerViewModel).ToList();
+            return View(viewModel);
+        }
+
+
+        public IActionResult GetFrom(int startPos)
+        {
+            var viewModel = new PlayerListViewModel();
+            viewModel.Players = _playerRepository.GetFrom(startPos).Select(PlayerToPlayerViewModel).ToList();
             return View(viewModel);
         }
 
