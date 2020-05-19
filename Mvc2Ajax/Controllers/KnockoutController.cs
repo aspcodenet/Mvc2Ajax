@@ -40,9 +40,16 @@ namespace Mvc2Ajax.Controllers
         public IActionResult KnockoutList()
         {
             var viewModel = new PlayerListViewModel();
-            viewModel.Players = _playerRepository.GetAll().Select(PlayerToPlayerViewModel).ToList();
+            viewModel.Players = _playerRepository.GetFrom(0).Select(PlayerToPlayerViewModel).ToList();
             return View(viewModel);
         }
+
+
+        public IActionResult GetFrom(int startPos)
+        {
+            return Json( _playerRepository.GetFrom(startPos).Select(PlayerToPlayerViewModel).ToList());
+        }
+
 
         private PlayerListViewModel.PlayerViewModel PlayerToPlayerViewModel(Player arg)
         {

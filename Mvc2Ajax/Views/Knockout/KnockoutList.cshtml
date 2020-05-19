@@ -20,37 +20,39 @@
             <th scope="col">Name</th>
         </tr>
     </thead>
-    <tbody data-bind="foreach: players">
+    <tbody  data-bind="foreach: players">
     <tr>
         <td data-bind="text: name"></td>
-        <td data-bind="click: $root.selectMe">Select me</td>
     </tr>
     </tbody>
 </table>
 
 
-<div data-bind="with: selected">
-    <h2>Current player: <span data-bind="text: name"></span></h2>
-    <img data-bind="attr:{ src: imageUrl}" />
-</div>
 
-
-
-
-
+<button data-bind="click: fetch20more">Tryck</button>
 @section scripts{
     <script>
-        var playerViewModel = function (data) {
+        var playerViewModel = function(data) {
             self = this;
             ko.mapping.fromJS(data, {}, this);
 
-            self.selected = ko.observable(null);
+            self.skip = ko.observable(0);
 
-            self.selectMe = function (player) {
-                console.dir(player);
-                self.selected(player);
+            self.fetch20more = function() {
+                self.skip(self.skip() + 20);
+                $.ajax({
+                    url: "/knockout/GetFrom?startPos=" + self.skip(),
+                    success: function(result) {
+                        //result
+                        for (i = 0; i < result.length; i++)
+                            self.players.push(result[i]);
+                    }
+                });
             }
+
+
         }
+    
 
         //var mapping = {
         //    'players': {
