@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Mvc2Ajax.Services;
+using SharedThings;
 
 namespace Mvc2Ajax
 {
@@ -43,6 +44,7 @@ namespace Mvc2Ajax
                     };
                 });
             services.AddTransient<IPlayerRepository,PlayerRepository>();
+            services.AddTransient<IBookRepository, BookRepository>();
             services.AddControllersWithViews();
         }
 

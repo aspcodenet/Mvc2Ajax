@@ -11,9 +11,8 @@ namespace Mvc2Ajax.Services
         private static List<Player> _players = new List<Player>();
         public PlayerRepository()
         {
-            if(_players.Count() == 0)
-                for (var i = 0; i < 100; i++)
-                    _players.Add(new Player{Id = Guid.NewGuid(),JerseyNumber = i, Name = "Player"+i,Position = "dsd"});
+            for (var i = 0; i < 100; i++)
+                _players.Add(new Player { Id = Guid.NewGuid(), JerseyNumber = i, Name = "Player" + i, Position = "dsd" });
         }
 
         public IEnumerable<Player> GetAll()
